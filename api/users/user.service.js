@@ -18,6 +18,22 @@ exports.register = function(req, res){
     })(req, res)
 };
 
+exports.login = function(req, res){
+    console.log(req.body);
+    passport.authenticate('local-login', function(err, user, info){
+        if(err){
+            return res.status(500).json(err);
+        }
+
+        if(user){
+            var token = user.generateJwt();
+            res.status(200).json({ 'token': token });
+        } else{
+            res.status(401).json(info);
+        }
+    })(req, res)
+};
+
 exports.getAll = function(req, res){
     User.find({}, function(err, users){
         if(err){
@@ -27,3 +43,5 @@ exports.getAll = function(req, res){
         res.status(200).json(users);
     });
 };
+
+exports.isAuth = passport.authenticate('jwt', { session: false });

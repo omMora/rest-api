@@ -4,8 +4,12 @@ var express = require('express');
 var router = express.Router();
 var userService = require('./user.service');
 
-router.get('/', userService.getAll);
+
 
 router.post('/register', userService.register);
+
+router.post('/login', userService.login);
+
+router.get('/', userService.isAuth, userService.getAll);
 
 module.exports = router;
